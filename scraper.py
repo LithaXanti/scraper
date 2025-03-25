@@ -33,18 +33,18 @@ if "Access" in driver.title or "blocked" in driver.page_source.lower():
     driver.quit()
     exit()
 
-    scraped_data = []
-    page_number = 1
-    while True:
-        print(f"Scraping page {page_number}")
+scraped_data = []
+page_number = 1
 
-        try:
-            container = driver.find.element("css selector", "div.HomeCardsContainer")
-            listings = container.find_elements("css selector", "div.HomeCardContainer")
-        except:
-            print(f"An error occurred: {e}")
-            break
-        
+while True:
+    print(f"Scraping page {page_number}")
+
+    try:
+        container = driver.find_element("css selector", "div.HomeCardsContainer")
+        listings = container.find_elements("css selector", "div.HomeCardContainer")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        break
 
     print(f"Found {len(listings)} listings on page {page_number}")
 
@@ -54,69 +54,71 @@ if "Access" in driver.title or "blocked" in driver.page_source.lower():
         except:
             price = "N/A"
 
-            try:
-                address = listing.find_element("css selector", "div.bpHomeCard__Address").text.strip()
-            except:
-                print("Address not found")
-                continue
+        try:
+            address = listing.find_element("css selector", "div.bp-Homecard__Address").text.strip()
+        except:
+            print("Address not found")
+            continue
 
-            try:
-                beds = listing.find_element("css selector", "span.bpHomeCard__Stats--beds").text.strip()
-            except:
-                beds = "N/A"
+        try:
+            beds = listing.find_element("css selector", "span.bp-Homecard__Stats--beds").text.strip()
+        except:
+            beds = "N/A"
 
-                try:
-                    baths = listing.find_element("css selector", "span.bpHomeCard__Stats--baths").text.strip()
-                except:
-                    baths = "N/A"
+        try:
+            baths = listing.find_element("css selector", "span.bp-Homecard__Stats--baths").text.strip()
+        except:
+            baths = "N/A"
 
-                try:
-                    sqft = listing.find_element("css selector", "span.bpHomeCard__LockedStat--value").text.strip()
-                except:
-                    sqft = "N/A"
+        try:
+            sqft = listing.find_element("css selector", "span.bp-Homecard__LockedStat--value").text.strip()
+        except:
+            sqft = "N/A"
 
-                    try:
-                        link = listing.find_element("css selector", "a.linl-and-anchor").get_attribute("href")
-                        link = f"https://www.redfin.com{link}" if link.startswith("/") else link
-                    except:
-                        print("Link not found")
-                        continue
+        try:
+            link = listing.find_element("css selector", "a.link-and-anchor").get_attribute("href")
+            link = f"https://www.redfin.com{link}" if link.startswith("/") else link
+        except:
+            print("Link not found")
+            continue
 
-                    try:
-                        image_element = listing.find_element("css selector", "img.bp-Homecard__Photo--image")
-                        image_url = image_element.get_attribute("src")
-                    except:
-                        image_url = "N/A"
+        try:
+            image_element = listing.find_element("css selector", "img.bp-Homecard__Photo--image")
+            image_url = image_element.get_attribute("src")
+        except:
+            image_url = "N/A"
 
-                        try:
-                            json_script = listing.find_element("css selector", "script[type='application/id+json']").get_attribute("innerHTML")
-                            json_data = json.loads(json_script)
-                            latitude = json_data[0]["geo"]["latitude"]
-                            longitude = json_data[0]["geo"]["longitude"]
-                        except:
-                            latitude = "N/A"
-                            longitude = "N/A"
+        try:
+            json_script = listing.find_element("css selector", "script[type='application/ld+json']").get_attribute("innerHTML")
+            json_data = json.loads(json_script)
+            latitude = json_data[0]["geo"]["latitude"]
+            longitude = json_data[0]["geo"]["longitude"]
+        except:
+            latitude = "N/A"
+            longitude = "N/A"
 
-                            scraped_data.append({
-                                "price": price,
-                                "address": address,
-                                "beds": beds,
-                                "baths": baths,
-                                "sqft": sqft,
-                                "link": link,
-                                "image_url": image_url,
-                                "latitude": latitude,
-                                "longitude": longitude
-                            })
+        scraped_data.append({
+            "price": price,
+            "address": address,
+            "beds": beds,
+            "baths": baths,
+            "sqft": sqft,
+            "link": link,
+            "image_url": image_url,
+            "latitude": latitude,
+            "longitude": longitude
+        })
 
-                            try:
-                                next_button = driver.find_element("css selector", "button.PaginationButton.PaginationButton--next")
-                                next_button.click()
-                                time.sleep(random.uniform(5, 8))
-                                page_number += 1
-                            except:
-                                print("No more pages")
-                                break
+    try:
+        next_button = driver.find_element("css selector", "button.PaginationButton.PaginationButton--next")
+        next_button.click()
+        time.sleep(random.uniform(5, 8))
+        page_number += 1
+    except:
+        print("No more pages")
+        break
+    
+    
 
 import pandas as pd
 df = pd.DataFrame(scraped_data)
