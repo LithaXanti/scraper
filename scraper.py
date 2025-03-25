@@ -17,8 +17,14 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
     "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
     "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36",
 
 ]
+
+options = Options()
+options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
 
 service = Service(GeckoDriverManager().install())
 driver = webdriver.Firefox(service=service)
@@ -50,12 +56,12 @@ while True:
 
     for listing in listings:
         try:
-            price = listing.find_element("css selector", "span.bp-Homecard__Price--value").text.strip()
+            price = listing.find_element("css selector", "span[class*='homecardV2Price']").text.strip()
         except:
             price = "N/A"
 
         try:
-            address = listing.find_element("css selector", "div.bp-Homecard__Address").text.strip()
+            address = listing.find_element("css selector", "div[data-test='property-card-address']").text.strip()
         except:
             print("Address not found")
             continue
@@ -125,11 +131,4 @@ df = pd.DataFrame(scraped_data)
 df.to_csv("redfin_listings.csv", index=False)
 print(f"{len(df)}Data saved to CSV")
 
-driver.quit()
-                            
-                    
-            
-
-
-
-    
+driver.quit()    
