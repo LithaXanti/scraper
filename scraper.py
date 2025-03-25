@@ -34,7 +34,8 @@ driver = webdriver.Firefox(service=service)
 
 base_url = "https://www.redfin.com/neighborhood/547223/CA/Los-Angeles/Hollywood-Hills"
 driver.get(base_url)
-time.sleep(random.uniform(5, 8))
+def wait_for_element(driver, selector, timeout=10):
+            return WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
 
 print(f"Page title: {driver.title}")
 if "Access" in driver.title or "blocked" in driver.page_source.lower():
@@ -49,8 +50,11 @@ while True:
     print(f"Scraping page {page_number}")
 
     try:
-        container = driver.find_element("css selector", "div.HomeCardsContainer")
-        listings = container.find_elements("css selector", "div.HomeCardContainer")
+        container = driver.find_element("css selector", "div[data-rf-test-id='homes-container']")
+        listings = container.find_elements("css selector", "div[data-rf-test-name='property-card']")
+    except Exception as e:
+        print(f"An error occurred while locating the container or listings: {e}")
+        break
     except Exception as e:
         print(f"An error occurred: {e}")
         break
@@ -59,7 +63,7 @@ while True:
 
     for listing in listings:
         try:
-            price = listing.find_element("css selector", "span[class*='homecardV2Price']").text.strip()
+            price = listing.find_element("css selector", "div[data-rf-test-name='property-card']").text.strip()
         except:
             price = "N/A"
 
