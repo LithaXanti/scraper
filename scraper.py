@@ -63,40 +63,40 @@ while True:
 
     for listing in listings:
         try:
-            price = listing.find_element("css selector", "div[data-rf-test-name='property-card']").text.strip()
+            price = listing.find_element("css selector", "span[data-rf-test-id='ab-price']").text.strip()
         except:
             price = "N/A"
 
         try:
-            address = listing.find_element("css selector", "div[data-test='property-card-address']").text.strip()
+            address = listing.find_element("css selector", "div[data-rf-test-id='ab-address']").text.strip()
         except:
             print("Address not found")
             continue
 
         try:
-            beds = listing.find_element("css selector", "span.bp-Homecard__Stats--beds").text.strip()
+            beds = listing.find_element("css selector", "div[data-rf-test-id='ab-beds']").text.strip()
         except:
             beds = "N/A"
 
         try:
-            baths = listing.find_element("css selector", "span.bp-Homecard__Stats--baths").text.strip()
+            baths = listing.find_element("css selector", "div[data-rf-test-id='ab-baths']").text.strip()
         except:
             baths = "N/A"
 
         try:
-            sqft = listing.find_element("css selector", "span.bp-Homecard__LockedStat--value").text.strip()
+            sqft = listing.find_element("css selector", "div[data-rf-test-id='ab-sqFt']").text.strip()
         except:
             sqft = "N/A"
 
         try:
-            link = listing.find_element("css selector", "a.link-and-anchor").get_attribute("href")
+            link = listing.find_element("css selector", "a[data-rf-test-name='property-card-link']").get_attribute("href")
             link = f"https://www.redfin.com{link}" if link.startswith("/") else link
         except:
             print("Link not found")
             continue
 
         try:
-            image_element = listing.find_element("css selector", "img.bp-Homecard__Photo--image")
+            image_element = listing.find_element("css selector", "img[data-rf-test-id='property-card-image']")
             image_url = image_element.get_attribute("src")
         except:
             image_url = "N/A"
