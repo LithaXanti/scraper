@@ -110,7 +110,7 @@ while True:
         })
 
     try:
-        next_button = driver.find_element("css selector", "button.PaginationButton.PaginationButton--next")
+        next_button = driver.find_element("css selector", "button.PageArrow__direction--next")
         next_button.click()
         time.sleep(random.uniform(5, 8))
         page_number += 1
