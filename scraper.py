@@ -2,6 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 import random
 import json
@@ -118,7 +121,8 @@ while True:
     try:
         next_button = driver.find_element("css selector", "button.PageArrow__direction--next")
         next_button.click()
-        time.sleep(random.uniform(5, 8))
+        def wait_for_element(driver, selector, timeout=10):
+            return WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         page_number += 1
     except:
         print("No more pages")
