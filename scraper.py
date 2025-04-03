@@ -50,8 +50,8 @@ while True:
     print(f"Scraping page {page_number}")
 
     try:
-        container = driver.find_element("css selector", "div[data-rf-test-id='homes-container']")
-        listings = container.find_elements("css selector", "div[data-rf-test-name='property-card']")
+        container = driver.find_element("css selector", "div.HomeCardsContainer")
+        listings = container.find_elements("css selector", "div.HomeCardContainer")
     except Exception as e:
         print(f"An error occurred while locating the container or listings: {e}")
         break
@@ -63,28 +63,28 @@ while True:
 
     for listing in listings:
         try:
-            price = listing.find_element("css selector", "span[data-rf-test-id='ab-price']").text.strip()
+            price = listing.find_element("css selector", "span.bp-Homecard__Price--value").text.strip()
         except:
             price = "N/A"
 
         try:
-            address = listing.find_element("css selector", "div[data-rf-test-id='ab-address']").text.strip()
+            address = listing.find_element("css selector", "div.bp-Homecard_Address").text.strip()
         except:
             print("Address not found")
             continue
 
         try:
-            beds = listing.find_element("css selector", "div[data-rf-test-id='ab-beds']").text.strip()
+            beds = listing.find_element("css selector", "span.bp-Homecard__Stats--beds").text.strip()
         except:
             beds = "N/A"
 
         try:
-            baths = listing.find_element("css selector", "div[data-rf-test-id='ab-baths']").text.strip()
+            baths = listing.find_element("css selector", "span.bp-Homecard__Stats--baths").text.strip()
         except:
             baths = "N/A"
 
         try:
-            sqft = listing.find_element("css selector", "div[data-rf-test-id='ab-sqFt']").text.strip()
+            sqft = listing.find_element("css selector", "span.bp-Homecard__LockedStat--value").text.strip()
         except:
             sqft = "N/A"
 
