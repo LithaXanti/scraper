@@ -71,3 +71,25 @@ def summarize_data(df):
     print(df.describe())
 
 summarize_data(df)
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def plot_price_distribution(df):
+    plt.figure(figsize=(10, 6))
+    sns.histplot(df['price'], bins=30, kde=True)
+    plt.title('Price Distribution')
+    plt.xlabel('Price')
+    plt.ylabel('Frequency')
+    plt.show()
+plot_price_distribution(df)
+
+def analyse_beds_baths(df):
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='beds', y='baths', hue='price', palette='viridis', size='sqft', sizes=(20, 200))
+    plt.title('Beds vs Baths')
+    plt.xlabel('Number of Beds')
+    plt.ylabel('Number of Baths')
+    plt.legend()
+    plt.show()
